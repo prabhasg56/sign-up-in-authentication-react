@@ -8,9 +8,6 @@ const AuthForm = () => {
   const email = useRef("");
   const password = useRef("");
 
-  const enteredUser = email.current.value;
-  const enteredPassword = password.current.value;
-
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
@@ -19,35 +16,48 @@ const AuthForm = () => {
     event.preventDefault();
     setIsLoading(true);
 
+    const enteredUser = email.current.value;
+    const enteredPassword = password.current.value;
+
+    let url;
+
     if (isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDHg3icjrRbCcrwXkQZPXfPCutfZg-Bm0Y";
     } else {
-      try {
-        const response = await fetch(
-          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDHg3icjrRbCcrwXkQZPXfPCutfZg-Bm0Y",
-          {
-            method: "POST",
-            body: JSON.stringify({
-              email: enteredUser,
-              password: enteredPassword,
-              returnSecureToken: true,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.ok) {
-          alert("Welcome! Your account successfully created");
-        } else {
-          const responseJson = await response.json();
-
-          throw new Error(responseJson.error.message);
-        }
-      } catch (error) {
-        alert(error);
-      }
+      url =
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDHg3icjrRbCcrwXkQZPXfPCutfZg-Bm0Y";
     }
+
+    try {
+      const response = await fetch(url,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: enteredUser,
+            password: enteredPassword,
+            returnSecureToken: true,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(response)
+      if (response.ok) {
+        alert("Welcome! Your account successfully created");
+      } else {
+        const responseJson = await response.json();
+
+        throw new Error(responseJson.error.message);
+      }
+    } catch (error) {
+      alert(error);
+    }
+
+    email.current.value = "";
+    password.current.value = "";
 
     setIsLoading(false);
   };
@@ -66,7 +76,7 @@ const AuthForm = () => {
         </div>
         <div className={classes.actions}>
           <button> {isLogin ? "Login" : "Create account"}</button>
-          {isLoading && <p style={{color:'white'}}>Sending request...</p>}
+          {isLoading && <p style={{ color: "white" }}>Sending request...</p>}
           <button
             type="button"
             className={classes.toggle}
