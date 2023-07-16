@@ -1,12 +1,14 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 
 import classes from "./AuthForm.module.css";
+import AuthContext from "../store/Auth-Context";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const email = useRef("");
   const password = useRef("");
+  const authCtx = useContext(AuthContext);
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -19,37 +21,39 @@ const AuthForm = () => {
     const enteredUser = email.current.value;
     const enteredPassword = password.current.value;
 
-    let url;
+    let url, message;
 
     if (isLogin) {
+      message = "Welcome!";
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDHg3icjrRbCcrwXkQZPXfPCutfZg-Bm0Y";
     } else {
+      message = "Welcome! Your account successfully created";
       url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDHg3icjrRbCcrwXkQZPXfPCutfZg-Bm0Y";
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDHg3icjrRbCcrwXkQZPXfPCutfZg-Bm0Y";
     }
 
     try {
-      const response = await fetch(url,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: enteredUser,
-            password: enteredPassword,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: enteredUser,
+          password: enteredPassword,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      console.log(response)
+      const responseJson = await response.json();
+      console.log(responseJson);
+
+      authCtx._currentValue.addToken(responseJson.idToken, responseJson.refreshToken)
+
       if (response.ok) {
-        alert("Welcome! Your account successfully created");
+        alert(message);
       } else {
-        const responseJson = await response.json();
-
         throw new Error(responseJson.error.message);
       }
     } catch (error) {
