@@ -1,7 +1,7 @@
 import { useState, useRef, useContext } from "react";
 
 import classes from "./AuthForm.module.css";
-import AuthContext from "../store/Auth-Context";
+import AuthContext from "../../store/Auth-Context";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -49,9 +49,9 @@ const AuthForm = () => {
       const responseJson = await response.json();
       console.log(responseJson);
 
-      authCtx._currentValue.addToken(responseJson.idToken, responseJson.refreshToken)
-
       if (response.ok) {
+        authCtx._currentValue.login(responseJson.idToken, responseJson.refreshToken)
+
         alert(message);
       } else {
         throw new Error(responseJson.error.message);
