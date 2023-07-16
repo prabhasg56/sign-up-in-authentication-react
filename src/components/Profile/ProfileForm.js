@@ -1,12 +1,17 @@
 import classes from "./ProfileForm.module.css";
 import AuthContext from "../../store/Auth-Context";
 import { useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProfileForm = () => {
   const newPasswordRef = useRef();
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const changePasswordHandler = async () => {
+
+  const changePasswordHandler = async (e) => {
+    e.preventDefault();
+    
     try {
       const response = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDHg3icjrRbCcrwXkQZPXfPCutfZg-Bm0Y",
@@ -25,8 +30,13 @@ const ProfileForm = () => {
 
       const responseJson = await response.json();
 
+      console.log(response)
+
+      console.log(responseJson)
+
       if (response.ok) {
         alert("Your password successfully changed!");
+        navigate('/');
       } else {
         throw new Error(responseJson.error.message);
       }

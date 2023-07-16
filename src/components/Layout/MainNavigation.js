@@ -1,14 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import classes from "./MainNavigation.module.css";
 import AuthContext from "../../store/Auth-Context";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 const MainNavigation = () => {
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const removeToken = () => {
     authCtx._currentValue.logout();
+    navigate('/');
   };
 
   return (
