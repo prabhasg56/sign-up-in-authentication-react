@@ -9,11 +9,13 @@ const AuthProvider = (props) => {
 
   const loginHandler = (idToken, refreshToken) => {
     setIdToken(idToken);
+    localStorage.setItem('token', idToken);
     setRefreshToken(refreshToken);
   };
 
   const logoutHandler = () => {
     setIdToken(null);
+    localStorage.clear('token');
     setRefreshToken(null);
   };
 

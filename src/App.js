@@ -9,15 +9,15 @@ import AuthProvider from "./store/Auth-Provider";
 function App() {
 
   return (
-    <AuthProvider>
-      <Layout>
+     <AuthProvider>
+       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </Layout>
-    </AuthProvider>
+     </AuthProvider>
   );
 }
 
