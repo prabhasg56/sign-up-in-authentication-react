@@ -7,6 +7,7 @@ const AuthProvider = (props) => {
   const [refreshToken, setRefreshToken] = useState(null);
 
   const userIsLoggedIn = !!idToken // "prabhas" return true, and if "" return false
+  console.log(userIsLoggedIn)
 
   const loginHandler = (idToken, refreshToken) => {
     setIdToken(idToken);
