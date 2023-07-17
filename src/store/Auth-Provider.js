@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import AuthContext from "./Auth-Context";
 
 const AuthProvider = (props) => {
-  const [idToken, setIdToken] = useState(null);
+  const initialToken = localStorage.getItem('token');
+  const [idToken, setIdToken] = useState(initialToken);
   const [refreshToken, setRefreshToken] = useState(null);
 
-  const userIsLoggedIn = !!idToken; // "prabhas" return true, and if "" return false
+  const userIsLoggedIn = !!idToken // "prabhas" return true, and if "" return false
 
   const loginHandler = (idToken, refreshToken) => {
     setIdToken(idToken);
@@ -15,7 +16,7 @@ const AuthProvider = (props) => {
 
   const logoutHandler = () => {
     setIdToken(null);
-    localStorage.clear('token');
+    localStorage.removeItem('token');
     setRefreshToken(null);
   };
 
